@@ -1,0 +1,37 @@
+modules:
+  - scripts.systems.window
+  - scripts.systems.pipeline
+
+time:
+  order: -50
+  ticks: 256
+
+input:
+  order: -40
+
+  actions:
+    KeyEsc: 'act_break'
+
+window:
+  order: -30
+  width: 1280
+  height: 720
+  label: 'e3d3'
+  full: false
+  borderless: false
+
+render:
+  order: -20
+  width: 1920
+  height: 1080
+  near: 0.1
+  far: 300
+  fov: 80
+
+sounds:
+  order: -10
+  sources: 16
+
+physic:
+  order: 0
+  steps: 16
