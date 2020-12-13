@@ -45,7 +45,7 @@ class Components(e3d3.data.ContentManager):
 
 class System:
     '''Base class of all Systems
-    Automatic all child classes expose to e3d3 scope an register in system list
+    Automatic all child classes expose to e3d3 scope and register in system list
 
     All method require @staticmethod or @classmethod decorator because system is a singletone
     '''
