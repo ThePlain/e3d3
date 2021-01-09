@@ -47,6 +47,7 @@ class Window(e3d3.core.System):
 
         if not cls.window:
             e3d3.events.dispatch('app.stop')
+            raise WindowError('cant create GLFW Window')
 
         glfw.set_key_callback(cls.window, cls.key_callback)
 
@@ -55,13 +56,15 @@ class Window(e3d3.core.System):
         e3d3.events.subscribe(cls.cursor_show, 'window.cursor.show')
         e3d3.events.subscribe(cls.cursor_lock, 'window.cursor.lock')
 
+        logger.info('Window successful created.')
+
     @classmethod
     def update(cls):
         glfw.poll_events()
         glfw.swap_buffers(cls.window)
 
         if glfw.window_should_close(cls.window):
-            e3d3.events.dispatch('app.stop')
+            e3d3.events.lazy_distpatch('app.stop')
 
     @classmethod
     def clean(cls):
