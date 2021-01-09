@@ -2,6 +2,7 @@ import weakref
 
 
 LISTENERS = dict()
+LASYQUEUE = list()
 # TODO: Strong holder with weak link to item
 
 
@@ -25,6 +26,26 @@ def dispatch(event, *args, **kwargs):
 
     for listener in LISTENERS[event]:
         listener(*args, **kwargs)
+
+
+def lazy_distpatch(event, *args, **kwargs):
+    global LASYQUEUE
+
+    LASYQUEUE.append((event, args, kwargs))
+
+
+def exec_lasyqueue():
+    global LASYQUEUE
+
+    if not LASYQUEUE:
+        return
+
+    queue = LASYQUEUE
+    LASYQUEUE = list()
+
+    for task in queue:
+        name, args, kwargs = task
+        dispatch(name, *args, **kwargs)
 
 
 def lookup(target):
