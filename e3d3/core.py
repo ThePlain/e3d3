@@ -113,16 +113,34 @@ def run():
     for module in config['modules']:
         __import__(module)
 
-    e3d3.events.subscribe(clean, 'app.stop')
-    e3d3.events.dispatch('app.run')
-    for system in sorted_systems():
-        system.run()
+    logger.info('Preheat systems')
+    try:
+        e3d3.events.subscribe(clean, 'app.stop')
+        e3d3.events.dispatch('app.run')
+        for system in sorted_systems():
+            system.run()
+
+    except e3d3.error.CoreError as error:
+        logger.exception(error)
+        exit()
+
+    except e3d3.error.CoreWarning as error:
+        logger.warning(error)
 
     while IS_RUN:
-        e3d3.events.dispatch('app.update.before')
-        for system in sorted_systems():
-            system.update()
-        e3d3.events.dispatch('app.update')
+        try:
+            e3d3.events.dispatch('app.update.before')
+            for system in sorted_systems():
+                system.update()
+            e3d3.events.dispatch('app.update')
+            e3d3.events.exec_lasyqueue()
+        
+        except e3d3.error.CoreError as error:
+            logger.exception(error)
+            break
+
+        except e3d3.error.CoreWarning as error:
+            logger.warning(error)
 
     e3d3.events.dispatch('app.stop')
 
